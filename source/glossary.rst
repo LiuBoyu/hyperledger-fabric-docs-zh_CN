@@ -46,9 +46,9 @@ Chaincode
 Chaincode is software, running on a ledger, to encode assets and the transaction
 instructions (business logic) for modifying the assets.
 
-.. _Channel:
+.. _频道(Channel):
 
-Channel
+频道(Channel)
 -------
 
 A channel is a private blockchain overlay which allows for data

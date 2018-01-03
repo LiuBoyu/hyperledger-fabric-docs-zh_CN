@@ -1,160 +1,86 @@
-Hyperledger Fabric Model
+Hyperledger Fabric 模型
 ========================
 
-This section outlines the key design features woven into Hyperledger Fabric that
-fulfill its promise of a comprehensive, yet customizable, enterprise blockchain solution:
+本节概述了 Hyperledger Fabric 的关键设计特征，并介绍了其是如何履行其全面而可定制的企业区块链解决方案的承诺的。
 
-* :ref:`Assets` - Asset definitions enable the exchange of almost anything with
-  monetary value over the network, from whole foods to antique cars to currency
-  futures.
-* :ref:`Chaincode` - Chaincode execution is partitioned from transaction ordering,
-  limiting the required levels of trust and verification across node types, and
-  optimizing network scalability and performance.
-* :ref:`Ledger-Features` - The immutable, shared ledger encodes the entire
-  transaction history for each channel, and includes SQL-like query capability
-  for efficient auditing and dispute resolution.
-* :ref:`Privacy-through-Channels` - Channels enable multi-lateral transactions
-  with the high degrees of privacy and confidentiality required by competing
-  businesses and regulated industries that exchange assets on a common network.
-* :ref:`Security-Membership-Services` - Permissioned membership provides a
-  trusted blockchain network, where participants know that all transactions can
-  be detected and traced by authorized regulators and auditors.
-* :ref:`Consensus` - a unique approach to consensus enables the
-  flexibility and scalability needed for the enterprise.
+* :ref:`资产(Assets)` - 资产(Assets)的定义使得在网络上可以交换几乎所有具有货币价值的东西，从食物到古董车到货币期货。
+* :ref:`链码(Chaincode)` - 链码(Chaincode)包括，交易排序，限制所需的信任级别，跨节点类型的验证，优化网络可扩展性和性能。
+* :ref:`帐本功能(Ledger Features)` - 不可变的共享账本，记录了一个频道(Channel)的所有交易历史记录，并包含类似于SQL的查询功能，以有效审计和解决争议。
+* :ref:`基于频道(Channel)的隐私保护` - 频道(Channel)使多边交易具有高度的隐私性和机密性，并使竞争的企业和受管制的行业在共同的网络上交换资产。
+* :ref:`安全及会员服务(Security-Membership-Services)` - 具有权限的会员提供一个受信任的区块链网络，在这个网络中，参与者知道所有交易都可以被授权的监管机构和审计人员发现并追查。
+* :ref:`共识(Consensus)` - 统一的共识(Consensus)使企业具备所需的灵活性和可伸缩性。
 
-.. _Assets:
+.. _资产(Assets):
 
-Assets
+资产(Assets)
 ------
 
-Assets can range from the tangible (real estate and hardware) to the intangible
-(contracts and intellectual property).  Hyperledger Fabric provides the
-ability to modify assets using chaincode transactions.
+资产(Assets)可以从有形资产（不动产和硬件）到无形资产（合同和知识产权）。Hyperledger Fabric提供了使用链码交易(Chaincode Transaction)修改资产(Assets)的能力。
 
-Assets are represented in Hyperledger Fabric as a collection of
-key-value pairs, with state changes recorded as transactions on a :ref:`Channel`
-ledger.  Assets can be represented in binary and/or JSON form.
+在 Hyperledger Fabric 中，资产(Assets)被表示为一组键值对集合，其状态更改的历史记录做为“交易”被记录在 :ref:`频道(Channel)` 的账本之上。资产(Assets)可以用二进制和JSON形式表示。
 
-You can easily define and use assets in your Hyperledger Fabric applications
-using the `Hyperledger Composer <https://github.com/hyperledger/composer>`__ tool.
+你可以在 Hyperledger Fabric 应用程序中轻松定义和使用资产，使用 `Hyperledger Composer <https://github.com/hyperledger/composer>`_ 。
 
-.. _Chaincode:
+.. _链码(Chaincode):
 
-Chaincode
+链码(Chaincode)
 ---------
 
-Chaincode is software defining an asset or assets, and the transaction instructions for
-modifying the asset(s).  In other words, it's the business logic.  Chaincode enforces the rules for reading
-or altering key value pairs or other state database information. Chaincode functions execute against
-the ledger's current state database and are initiated through a transaction proposal. Chaincode execution
-results in a set of key value writes (write set) that can be submitted to the network and applied to
-the ledger on all peers.
+链码(Chaincode)是一段代码，它定义一个或多个资产(Assets)，以及修改资产的相关交易指令。换言之，就是业务逻辑。链码(Chaincode)按执行规则读取或修改键值对，或状态数据库(State Database)信息。链码(Chaincode)函数基于账本的当前状态数据库(State Database)执行，当有交易提议(Transaction Proposal)时启动。链码(Chaincode)执行后产生一组键值的写入操作（写集），可以提交给网络并应用于所有节点(Peer)的帐本(Ledger)。
 
-.. _Ledger-Features:
+.. _帐本功能(Ledger Features):
 
-Ledger Features
+帐本功能(Ledger Features)
 ---------------
 
-The ledger is the sequenced, tamper-resistant record of all state transitions in the fabric.  State
-transitions are a result of chaincode invocations ('transactions') submitted by participating
-parties.  Each transaction results in a set of asset key-value pairs that are committed to the
-ledger as creates, updates, or deletes.
+账本(Ledger)是一组顺序的、防篡改的记录集，记录了 Fabric 中所有的状态改变(State Transition)。状态改变(State Transition)是链码(Chaincode)调用（“交易”）的结果，由相关的参与者提交。每笔交易都会产生一组资产(Assets)的键值对集合，并将其提交给账本(Ledger)，进行创建，更新或删除。
 
-The ledger is comprised of a blockchain ('chain') to store the immutable, sequenced record in
-blocks, as well as a state database to maintain current fabric state.  There is one ledger per
-channel. Each peer maintains a copy of the ledger for each channel of which they are a member.
+账本(Ledger)由一个区块链（“链”）和一个状态数据库组成，区块链用于存储不可变的顺序记录块，状态数据库用来维护当前的数据状态。每一个账本(Ledger)对应一个频道(Channel)。每个节点(Peer)为其所属的每个频道(Channel)保留一份账本(Ledger)的副本。
 
-- Query and update ledger using key-based lookups, range queries, and composite key queries
-- Read-only queries using a rich query language (if using CouchDB as state database)
-- Read-only history queries - Query ledger history for a key, enabling data provenance scenarios
-- Transactions consist of the versions of keys/values that were read in chaincode (read set) and keys/values that were written in chaincode (write set)
-- Transactions contain signatures of every endorsing peer and are submitted to ordering service
-- Transactions are ordered into blocks and are "delivered" from an ordering service to peers on a channel
-- Peers validate transactions against endorsement policies and enforce the policies
-- Prior to appending a block, a versioning check is performed to ensure that states for assets that were read have not changed since chaincode execution time
-- There is immutability once a transaction is validated and committed
-- A channel's ledger contains a configuration block defining policies, access control lists, and other pertinent information
-- Channel's contain :ref:`MSP` instances allowing for crypto materials to be derived from different certificate authorities
+- 基于键(Key)查询和更新账本(Ledger)，范围查询和组合键查询
+- 基于丰富查询语言(a rich query language)的只读查询（如果使用 CouchDB 作为状态数据库）
+- 只读历史记录查询 - 基于键(Key)的历史记录查询，可以支持数据溯源场景
+- 交易(Transaction)由在链码(Chaincode)中读取的各个版本的键值集合（读集）和写入的各个版本的键值集合（写集）组成
+- 交易(Transaction)包含每个认可节点(Endorsing Peer)的签名，并提交给排序服务(共识服务)(Ordering Service)
+- 交易(Transaction)被顺序打包进区块(Block)中，并从排序服务(共识服务)(Ordering Service)“交付”给同一频道(Channel)的其他节点(Peer)
+- 节点(Peer)基于认可策略(Endorsement Policy)来验证交易并执行
+- 在添加进区块(Block)之前，会进行版本检查(Versioning Check)，以确保，在链码(Chaincode)执行期间，读取的资产(Assets)状态未发生变化
+- 交易一旦得到确认和提交，将不可改变
+- 每个频道(Channel)的账本(Ledger)都包含了一个配置区块(Configuration Block)，用于定义策略，访问控制列表和其他相关信息
+- 频道(Channel)包含了 :ref:`MSP` 实例，允许从不同的证书颁发机构派生加密资料
 
-See the :doc:`ledger` topic for a deeper dive on the databases, storage structure, and "query-ability."
+请参阅 :doc:`ledger` 主题，以深入了解数据库，存储结构和“查询能力”。
 
-.. _Privacy-through-Channels:
+.. _基于频道(Channel)的隐私保护:
 
-Privacy through Channels
+基于频道(Channel)的隐私保护
 ------------------------
 
-Hyperledger Fabric employs an immutable ledger on a per-channel basis, as well as
-chaincodes that can manipulate and modify the current state of assets (i.e. update
-key value pairs).  A ledger exists in the scope of a channel - it can be shared
-across the entire network (assuming every participant is operating on one common
-channel) - or it can be privatized to only include a specific set of participants.
+Hyperledger Fabric在每个频道(Channel)的基础上使用了一个不可变的帐本，以及可以操纵和修改资产当前状态的链码(Chaincode)（例如：更新键值对）。帐本存在于频道(Channel)的范围之内 - 它可以共享给整个网络（假设所有参与者都在一个共同的频道上运行），又或者，也可以私有化，只包含一组特定的参与者。
 
-In the latter scenario, these participants would create a separate channel and
-thereby isolate/segregate their transactions and ledger.  In order to solve
-scenarios that want to bridge the gap between total transparency and privacy,
-chaincode can be installed only on peers that need to access the asset states
-to perform reads and writes (in other words, if a chaincode is not installed on
-a peer, it will not be able to properly interface with the ledger).  To further
-obfuscate the data, values within chaincode can be encrypted (in part or in total) using common
-cryptographic algorithms such as AES before appending to the ledger.
+在后一种情况下，这些参与者将创建一个单独的频道(Channel)，从而隔离他们的交易和帐本。为了解决透明度与隐私之间的矛盾，链码(Chaincode)只需安装在需要访问资产(Assets)状态的节点上，执行读取和写入操作（换言之，如果链码(Chaincode)没有安装在某节点之上，则此节点将不能访问此账本）。或更进一步，混淆数据，链码(Chaincode)中的数据（部分或全部）在添加到账本之前，可以使用常见的加密算法（例如AES）进行加密。
 
-.. _Security-Membership-Services:
+.. _安全及会员服务(Security-Membership-Services):
 
-Security & Membership Services
+安全及会员服务(Security-Membership-Services)
 ------------------------------
 
-Hyperledger Fabric underpins a transactional network where all participants have
-known identities.  Public Key Infrastructure is used to generate cryptographic
-certificates which are tied to organizations, network components, and end users
-or client applications.  As a result, data access control can be manipulated and
-governed on the broader network and on channel levels.  This "permissioned" notion
-of Hyperledger Fabric, coupled with the existence and capabilities of channels,
-helps address scenarios where privacy and confidentiality are paramount concerns.
+Hyperledger Fabric巩固了所有参与者都拥有已知身份的交易网络。公钥基础设施用于生成加密证书，加密证书与组织机构，网络组件、最终用户或客户端应用相绑定。因此，数据访问控制可以在更广泛的网络和渠道层面进行管理和维护。 在 Hyperledger Fabric 中，这个“被许可(permissioned)”的概念与“频道(channel)”的存在和能力相关联，这有助于解决将隐私性和机密性放在首要位置的场景。
 
-See the :doc:`msp` topic to better understand cryptographic
-implementations, and the sign, verify, authenticate approach used in
-Hyperledger Fabric.
+请参阅 :doc:`msp` 主题以更好地理解 Hyperledger Fabric 的加密实现及相关的签名，校验，鉴权方法。
 
-.. _Consensus:
+.. _共识(Consensus):
 
-Consensus
+共识(Consensus)
 ---------
 
-In distributed ledger technology, consensus has recently become synonymous with
-a specific algorithm, within a single function. However, consensus encompasses more
-than simply agreeing upon the order of transactions, and this differentiation is
-highlighted in Hyperledger Fabric through its fundamental role in the entire
-transaction flow, from proposal and endorsement, to ordering, validation and commitment.
-In a nutshell, consensus is defined as the full-circle verification of the correctness of
-a set of transactions comprising a block.
+在分布式账本技术中，共识(Consensus)最近已成为一个单一函数内特定算法的词汇。然而，共识(Consensus)所包含的含义更多，不仅仅是简单地共同商议交易顺序。这在 Hyperledger Fabric 的整个交易流程中，非常突出地表现出来，从提议(Proposal)和认可(Endorsement)，到排序(Ordering)，确认(Validation)和提交(Commitment)。简而言之，共识(Consensus)被定义为一个区块内交易集合的正确性闭环校验。
 
-Consensus is ultimately achieved when the order and results of a block's
-transactions have met the explicit policy criteria checks. These checks and balances
-take place during the lifecycle of a transaction, and include the usage of
-endorsement policies to dictate which specific members must endorse a certain
-transaction class, as well as system chaincodes to ensure that these policies
-are enforced and upheld.  Prior to commitment, the peers will employ these
-system chaincodes to make sure that enough endorsements are present, and that
-they were derived from the appropriate entities.  Moreover, a versioning check
-will take place during which the current state of the ledger is agreed or
-consented upon, before any blocks containing transactions are appended to the ledger.
-This final check provides protection against double spend operations and other
-threats that might compromise data integrity, and allows for functions to be
-executed against non-static variables.
+当一个区块内所有交易的顺序和结果都已经明确地按策略标准检查后，共识(Consensus)最终达成。这些检查发生在交易的整个生命周期，包括使用认可策略(Endorsement Policy)来决定哪些特定的成员必须认可(Endorse)某个特定的交易类型，以及，使用系统链码(System Chaincode)来确保这些策略得到执行和维护。提交之前，节点们(Peers)将调用这些系统链码(System Chaincode)，以确保获得来自适当实体(The Appropriate Entities)的足够数量的认可(Endorsement)。而且，在任何一个包含交易的区块被添加进账本之前，都会进行版本检查(Versioning Check)，以使账本的当前状态达成一致。最后的这步检查提供非常必要的保护，以避免双重支出操作和其他可能危及数据完整性的威胁，并允许针对非静态变量的函数执行。
 
-In addition to the multitude of endorsement, validity and versioning checks that
-take place, there are also ongoing identity verifications happening in all
-directions of the transaction flow.  Access control lists are implemented on
-hierarchal layers of the network (ordering service down to channels), and
-payloads are repeatedly signed, verified and authenticated as a transaction proposal passes
-through the different architectural components.  To conclude, consensus is not
-merely limited to the agreed upon order of a batch of transactions, but rather,
-it is an overarching characterization that is achieved as a byproduct of the ongoing
-verifications that take place during a transaction's journey from proposal to
-commitment.
+除了大量的认可(Endorsement)，确认(Validity)和版本检查(Versioning Check)之外，身份验证也同时在交易流程的所有方向进行着。访问控制列表在分层的网络结构上实现（排序服务(Ordering Service)到频道(Channel)），并且，当交易提议(Transaction Proposal)通过不同的构件时，负载数据将被多次签名(Signed)，验证(Verified)和认证(Authenticated)。总而言之，共识(Consensus)不仅限于代表一组批量交易的商议顺序，还包括了发生在整个交易的过程期间的，从提议(Proposal)到提交(Commitment)，的持续不断的各种校验。
 
-Check out the :doc:`txflow` diagram for a visual representation
-of consensus.
+查看 :doc:`txflow` 图表以更直观的理解共识。
 
 .. Licensed under Creative Commons Attribution 4.0 International License
    https://creativecommons.org/licenses/by/4.0/
