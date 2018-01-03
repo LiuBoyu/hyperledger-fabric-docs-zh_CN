@@ -1,4 +1,51 @@
-# Hyperledger Fabric 官方文档（中文翻译） #
+# Hyperledger Fabric v1.0 官方文档（中文翻译） #
+
+[Hyperledger Fabric v1.0 官方文档（中文翻译）](http://hyperledger-fabric-docs-cn.readthedocs.io/zh_CN/latest/)
+
+## 工作进度 ##
+
+| 章节 | 文件 | 行数 | 状态 |
+| --- | --- | --- | --- |
+| GETTING STARTED                                |                          |      |   |
+| Prerequisites                                  | prereqs                  |  161 | - |
+| Getting Started                                | getting_started          |   77 | - |
+| Hyperledger Fabric Samples                     | samples                  |   94 | - |
+| KEY CONCEPTS                                   |                          |      |   |
+| Introduction                                   | blockchain               |  249 | - |
+| Hyperledger Fabric Capabilities                | capabilities             |   76 | - |
+| Hyperledger Fabric Model                       | fabric_model             |  161 | DONE |
+| Use Cases                                      | usecases                 |   11 | DONE |
+| TUTORIALS                                      |                          |      |   |
+| Building Your First Network                    | build_network            | 1058 | - |
+| Writing Your First Application                 | write_first_app          |  506 | - |
+| Chaincode Tutorials                            | chaincode                |   33 | - |
+| Chaincode for Developers                       | chaincode4ade            |  522 | - |
+| Chaincode for Operators                        | chaincode4noah           |  416 | - |
+| Videos                                         | videos                   |   17 | - |
+| OPERATIONS GUIDE                               |                          |      |   |
+| ?                                              | best_practices           |    - | - |
+| Membership Service Providers (MSP)             | msp                      |  309 | - |
+| Channel Configuration (configtx)               | configtx                 |  490 | - |
+| Channel Configuration (configtxgen)            | configtxgen              |  332 | - |
+| Reconfiguring with configtxlator               | configtxlator            |  293 | - |
+| ?                                              | cc-packaging-and-signing |    - | - |
+| Endorsement policies                           | endorsement-policies     |  106 | - |
+| Error handling                                 | error-handling           |  151 | - |
+| Logging Control                                | logging-control          |  209 | - |
+| ARCHITECTURE                                   |                          |      |   |
+| Architecture Explained                         | arch-deep-dive           |  831 | - |
+| Transaction Flow                               | txflow                   |  117 | - |
+| Hyperledger Fabric CA's User Guide             |                 -        |    - | - |
+| Hyperledger Fabric SDKs                        | fabric-sdks              |   13 | - |
+| Bringing up a Kafka-based Ordering Service     | kafka                    |   96 | - |
+| Channels                                       | channels                 |   44 | - |
+| Ledger                                         | ledger                   |  168 | - |
+| Read-Write set semantics                       | readwrite                |  154 | - |
+| Gossip data dissemination protocol             | gossip                   |   87 | - |
+| TROUBLESHOOTING AND FAQS                       |                          |      |   |
+| Hyperledger Fabric FAQ                         | Fabric-FAQ               |  171 | - |
+| APPENDIX                                       |                          |      |   |
+| Glossary                                       | glossary                 |  369 | DOING |
 
 ## Introduction ##
 
