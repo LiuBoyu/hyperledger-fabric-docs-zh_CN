@@ -224,13 +224,12 @@ in order to communicate with the network ordering service on behalf of the
 member. The ordering service "delivers" blocks to the leading peer(s) on a
 channel, who then distribute them to other peers within the same member cluster.
 
-.. _Ledger:
+.. _账本(Ledger):
 
-Ledger
+账本(Ledger)
 ------
 
-A ledger is a channel's chain and current state data which is maintained by each
-peer on the channel.
+账本(Ledger)是指一个频道(Channel)所对应的链和其当前的状态数据(State Data)，由频道(Channel)上的每个节点(Peer)共同维护。
 
 .. _Member:
 
@@ -277,13 +276,12 @@ designed to support pluggable implementations beyond the out-of-the-box SOLO and
 The ordering service is a common binding for the overall network; it contains the cryptographic
 identity material tied to each Member_.
 
-.. _Peer:
+.. _节点(Peer):
 
-Peer
+节点(Peer)
 ----
 
-A network entity that maintains a ledger and runs chaincode containers in order to perform
-read/write operations to the ledger.  Peers are owned and maintained by members.
+一个网络实体，负责维护账本(Ledger)并运行链码(Chaincode)容器，以对账本(Ledger)执行读写操作。节点(Peer)由会员(Member)拥有和维护。
 
 .. _Policy:
 
