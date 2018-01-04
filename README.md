@@ -1,8 +1,25 @@
 # Hyperledger Fabric v1.0 官方文档（中文翻译） #
 
-[Hyperledger Fabric v1.0 官方文档（中文翻译）](http://hyperledger-fabric-docs-cn.readthedocs.io/zh_CN/latest/)
+## 项目简介 ##
 
-## 工作进度 ##
+本文档是 [Hyperledger Fabric v1.0.5](https://github.com/hyperledger/fabric/tree/014d6befcf67f3787bb3d67ff34e1a98dc6aec5f) 官方文档的简体中文翻译版本， 翻译工作正在进行中， 欢迎加入。
+
+Email: boyu.liu@gmail.com
+
+## 许可协议 ##
+
+本文档采用[知识共享署名 4.0 国际许可协议](http://creativecommons.org/licenses/by/4.0/)进行许可。  
+[![知识共享许可协议](https://i.creativecommons.org/l/by/4.0/88x31.png "知识共享许可协议")](http://creativecommons.org/licenses/by/4.0/)  
+
+## 在线阅读 ##
+
+Read the Docs: [Hyperledger Fabric v1.0 官方文档（中文翻译）](http://hyperledger-fabric-docs-cn.readthedocs.io/zh_CN/latest/)  
+![Read the Docs](https://readthedocs.org/projects/hyperledger-fabric-docs-cn/badge/)  
+
+Read the Docs: [Hyperledger Fabric v1.0 官方文档（英文原版）](http://hyperledger-fabric-docs.readthedocs.io/en/latest/)  
+![Read the Docs](https://readthedocs.org/projects/hyperledger-fabric-docs/badge/)  
+
+## 项目计划 ##
 
 | 章节 | 文件 | 行数 | 状态 |
 | --- | --- | --- | --- |
