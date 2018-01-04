@@ -61,12 +61,10 @@ Business:
    :maxdepth: 2
    :caption: Operations Guide
 
-   best_practices
    msp
    configtx
    configtxgen
    configtxlator
-   cc-packaging-and-signing
    endorsement-policies
    error-handling
    logging-control
@@ -93,29 +91,9 @@ Business:
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contributing
-
-   CONTRIBUTING
-   MAINTAINERS
-   jira_navigation
-   dev-setup/devenv
-   dev-setup/build
-   Gerrit/lf-account
-   Gerrit/gerrit
-   Gerrit/changes
-   Gerrit/reviewing
-   Gerrit/best-practices
-   testing
-   Style-guides/go-style
-
-.. toctree::
-   :maxdepth: 2
    :caption: Appendix
 
    glossary
-   releases
-   questions
-   status
 
 .. Licensed under Creative Commons Attribution 4.0 International License
    https://creativecommons.org/licenses/by/4.0/

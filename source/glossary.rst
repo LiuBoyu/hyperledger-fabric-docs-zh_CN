@@ -1,4 +1,4 @@
-*Needs Review*
+*此章节由 刘博宇 翻译，最后更新于2018.1.5*
 
 Glossary
 ===========================
@@ -49,7 +49,7 @@ instructions (business logic) for modifying the assets.
 .. _频道(Channel):
 
 频道(Channel)
--------
+--------------
 
 A channel is a private blockchain overlay which allows for data
 isolation and confidentiality. A channel-specific ledger is shared across the
@@ -227,7 +227,7 @@ channel, who then distribute them to other peers within the same member cluster.
 .. _账本(Ledger):
 
 账本(Ledger)
-------
+-------------
 
 账本(Ledger)是指一个频道(Channel)所对应的链和其当前的状态数据(State Data)，由频道(Channel)上的每个节点(Peer)共同维护。
 
@@ -279,7 +279,7 @@ identity material tied to each Member_.
 .. _节点(Peer):
 
 节点(Peer)
-----
+-----------
 
 一个网络实体，负责维护账本(Ledger)并运行链码(Chaincode)容器，以对账本(Ledger)执行读写操作。节点(Peer)由会员(Member)拥有和维护。
 

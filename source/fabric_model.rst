@@ -1,3 +1,5 @@
+*此章节由 刘博宇 翻译，最后更新于2018.1.3*
+
 Hyperledger Fabric 模型
 ========================
 
@@ -13,7 +15,7 @@ Hyperledger Fabric 模型
 .. _资产(Assets):
 
 资产(Assets)
-------
+-------------
 
 资产(Assets)可以从有形资产（不动产和硬件）到无形资产（合同和知识产权）。Hyperledger Fabric提供了使用链码交易(Chaincode Transaction)修改资产(Assets)的能力。
 
@@ -24,14 +26,14 @@ Hyperledger Fabric 模型
 .. _链码(Chaincode):
 
 链码(Chaincode)
----------
+----------------
 
 链码(Chaincode)是一段代码，它定义一个或多个资产(Assets)，以及修改资产的相关交易指令。换言之，就是业务逻辑。链码(Chaincode)按执行规则读取或修改键值对，或状态数据库(State Database)信息。链码(Chaincode)函数基于账本的当前状态数据库(State Database)执行，当有交易提议(Transaction Proposal)时启动。链码(Chaincode)执行后产生一组键值的写入操作（写集），可以提交给网络并应用于所有节点(Peer)的帐本(Ledger)。
 
 .. _帐本功能(Ledger Features):
 
 帐本功能(Ledger Features)
----------------
+-------------------------
 
 账本(Ledger)是一组顺序的、防篡改的记录集，记录了 Fabric 中所有的状态改变(State Transition)。状态改变(State Transition)是链码(Chaincode)调用（“交易”）的结果，由相关的参与者提交。每笔交易都会产生一组资产(Assets)的键值对集合，并将其提交给账本(Ledger)，进行创建，更新或删除。
 
@@ -54,7 +56,7 @@ Hyperledger Fabric 模型
 .. _基于频道(Channel)的隐私保护:
 
 基于频道(Channel)的隐私保护
-------------------------
+---------------------------
 
 Hyperledger Fabric在每个频道(Channel)的基础上使用了一个不可变的帐本，以及可以操纵和修改资产当前状态的链码(Chaincode)（例如：更新键值对）。帐本存在于频道(Channel)的范围之内 - 它可以共享给整个网络（假设所有参与者都在一个共同的频道上运行），又或者，也可以私有化，只包含一组特定的参与者。
 
@@ -63,7 +65,7 @@ Hyperledger Fabric在每个频道(Channel)的基础上使用了一个不可变�
 .. _安全及会员服务(Security-Membership-Services):
 
 安全及会员服务(Security-Membership-Services)
-------------------------------
+--------------------------------------------
 
 Hyperledger Fabric巩固了所有参与者都拥有已知身份的交易网络。公钥基础设施用于生成加密证书，加密证书与组织机构，网络组件、最终用户或客户端应用相绑定。因此，数据访问控制可以在更广泛的网络和渠道层面进行管理和维护。 在 Hyperledger Fabric 中，这个“具有权限的(permissioned)”的概念与“频道(channel)”的存在和能力相关联，这有助于解决将隐私性和机密性放在首要位置的场景。
 
@@ -72,7 +74,7 @@ Hyperledger Fabric巩固了所有参与者都拥有已知身份的交易网络�
 .. _共识(Consensus):
 
 共识(Consensus)
----------
+----------------
 
 在分布式账本技术中，共识(Consensus)最近已成为一个单一函数内特定算法的词汇。然而，共识(Consensus)所包含的含义更多，不仅仅是简单地共同商议交易顺序。这在 Hyperledger Fabric 的整个交易流程中，非常突出地表现出来，从提议(Proposal)和背书(Endorsement)，到排序(Ordering)，确认(Validation)和提交(Commitment)。简而言之，共识(Consensus)被定义为一个区块内交易集合的正确性闭环校验。
 
