@@ -40,12 +40,10 @@ Read the Docs: [Hyperledger Fabric v1.0 官方文档（英文原版）](http://h
 | Chaincode for Operators                        | chaincode4noah           |  416 | - |
 | Videos                                         | videos                   |   17 | - |
 | OPERATIONS GUIDE                               |                          |      |   |
-| ?                                              | best_practices           |    - | - |
 | Membership Service Providers (MSP)             | msp                      |  309 | - |
 | Channel Configuration (configtx)               | configtx                 |  490 | - |
 | Channel Configuration (configtxgen)            | configtxgen              |  332 | - |
 | Reconfiguring with configtxlator               | configtxlator            |  293 | - |
-| ?                                              | cc-packaging-and-signing |    - | - |
 | Endorsement policies                           | endorsement-policies     |  106 | - |
 | Error handling                                 | error-handling           |  151 | - |
 | Logging Control                                | logging-control          |  209 | - |
