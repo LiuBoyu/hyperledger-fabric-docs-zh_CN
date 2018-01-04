@@ -13,11 +13,11 @@ Email: boyu.liu@gmail.com
 
 ## 在线阅读 ##
 
-Read the Docs: [Hyperledger Fabric v1.0 官方文档（中文翻译）](http://hyperledger-fabric-docs-cn.readthedocs.io/zh_CN/latest/)  
-![Read the Docs](https://readthedocs.org/projects/hyperledger-fabric-docs-cn/badge/)  
+Read the Docs: [Hyperledger Fabric v1.0 官方文档（中文翻译）](http://hyperledger-fabric-docs-zh-cn.readthedocs.io/zh_CN/latest/)  
+![Read the Docs](https://readthedocs.org/projects/hyperledger-fabric-docs-zh-cn/badge/)  
 
-Read the Docs: [Hyperledger Fabric v1.0 官方文档（英文原版）](http://hyperledger-fabric-docs.readthedocs.io/en/latest/)  
-![Read the Docs](https://readthedocs.org/projects/hyperledger-fabric-docs/badge/)  
+Read the Docs: [Hyperledger Fabric v1.0 官方文档（英文原版）](http://hyperledger-fabric.readthedocs.io/en/latest/)  
+![Read the Docs](https://readthedocs.org/projects/hyperledger-fabric/badge/)  
 
 ## 项目计划 ##
 
