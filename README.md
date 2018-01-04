@@ -49,7 +49,7 @@ Read the Docs: [Hyperledger Fabric v1.0 官方文档（英文原版）](http://h
 | Logging Control                                | logging-control          |  209 | - |
 | ARCHITECTURE                                   |                          |      |   |
 | Architecture Explained                         | arch-deep-dive           |  831 | - |
-| Transaction Flow                               | txflow                   |  117 | - |
+| Transaction Flow                               | txflow                   |  117 | DONE |
 | Hyperledger Fabric CA's User Guide             |                 -        |    - | - |
 | Hyperledger Fabric SDKs                        | fabric-sdks              |   13 | - |
 | Bringing up a Kafka-based Ordering Service     | kafka                    |   96 | - |

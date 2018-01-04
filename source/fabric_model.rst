@@ -46,7 +46,7 @@ Hyperledger Fabric 模型
 - 交易(Transaction)包含每个背书节点(Endorsing Peer)的签名，并提交给排序服务(共识服务)(Ordering Service)
 - 交易(Transaction)被顺序打包进区块(Block)中，并从排序服务(共识服务)(Ordering Service)“交付”给同一频道(Channel)的其他节点(Peer)
 - 节点(Peer)基于背书策略(Endorsement Policy)来验证交易并执行
-- 在添加进区块(Block)之前，会进行版本检查(Versioning Check)，以确保，在链码(Chaincode)执行期间，读取的资产(Assets)状态未发生变化
+- 在附加进区块(Block)之前，会进行版本检查(Versioning Check)，以确保，在链码(Chaincode)执行期间，读取的资产(Assets)状态未发生变化
 - 交易一旦得到确认和提交，将不可改变
 - 每个频道(Channel)的账本(Ledger)都包含了一个配置区块(Configuration Block)，用于定义策略，访问控制列表和其他相关信息
 - 频道(Channel)包含了 :ref:`MSP` 实例，允许从不同的证书颁发机构派生加密资料
@@ -60,7 +60,7 @@ Hyperledger Fabric 模型
 
 Hyperledger Fabric在每个频道(Channel)的基础上使用了一个不可变的帐本，以及可以操纵和修改资产当前状态的链码(Chaincode)（例如：更新键值对）。帐本存在于频道(Channel)的范围之内 - 它可以共享给整个网络（假设所有参与者都在一个共同的频道上运行），又或者，也可以私有化，只包含一组特定的参与者。
 
-在后一种情况下，这些参与者将创建一个单独的频道(Channel)，从而隔离他们的交易和帐本。为了解决透明度与隐私之间的矛盾，链码(Chaincode)只需安装在需要访问资产(Assets)状态的节点上，执行读取和写入操作（换言之，如果链码(Chaincode)没有安装在某节点之上，则此节点将不能访问此账本）。或更进一步，混淆数据，链码(Chaincode)中的数据（部分或全部）在添加到账本之前，可以使用常见的加密算法（例如AES）进行加密。
+在后一种情况下，这些参与者将创建一个单独的频道(Channel)，从而隔离他们的交易和帐本。为了解决透明度与隐私之间的矛盾，链码(Chaincode)只需安装在需要访问资产(Assets)状态的节点上，执行读取和写入操作（换言之，如果链码(Chaincode)没有安装在某节点之上，则此节点将不能访问此账本）。或更进一步，混淆数据，链码(Chaincode)中的数据（部分或全部）在附加到账本之前，可以使用常见的加密算法（例如AES）进行加密。
 
 .. _安全及会员服务(Security-Membership-Services):
 
@@ -78,7 +78,7 @@ Hyperledger Fabric巩固了所有参与者都拥有已知身份的交易网络�
 
 在分布式账本技术中，共识(Consensus)最近已成为一个单一函数内特定算法的词汇。然而，共识(Consensus)所包含的含义更多，不仅仅是简单地共同商议交易顺序。这在 Hyperledger Fabric 的整个交易流程中，非常突出地表现出来，从提议(Proposal)和背书(Endorsement)，到排序(Ordering)，确认(Validation)和提交(Commitment)。简而言之，共识(Consensus)被定义为一个区块内交易集合的正确性闭环校验。
 
-当一个区块内所有交易的顺序和结果都已经明确地按策略标准检查后，共识(Consensus)最终达成。这些检查发生在交易的整个生命周期，包括使用背书策略(Endorsement Policy)来决定哪些特定的会员(Member)必须背书(Endorse)某个特定的交易类型，以及，使用系统链码(System Chaincode)来确保这些策略得到执行和维护。提交之前，节点们(Peers)将调用这些系统链码(System Chaincode)，以确保获得来自适当实体(The Appropriate Entities)的足够数量的背书(Endorsement)。而且，在任何一个包含交易的区块被添加进账本之前，都会进行版本检查(Versioning Check)，以使账本的当前状态达成一致。最后的这步检查提供非常必要的保护，以避免双重支出操作和其他可能危及数据完整性的威胁，并允许针对非静态变量的函数执行。
+当一个区块内所有交易的顺序和结果都已经明确地按策略标准检查后，共识(Consensus)最终达成。这些检查发生在交易的整个生命周期，包括使用背书策略(Endorsement Policy)来决定哪些特定的会员(Member)必须背书(Endorse)某个特定的交易类型，以及，使用系统链码(System Chaincode)来确保这些策略得到执行和维护。提交之前，节点们(Peers)将调用这些系统链码(System Chaincode)，以确保获得来自适当实体(The Appropriate Entities)的足够数量的背书(Endorsement)。而且，在任何一个包含交易的区块被附加进账本之前，都会进行版本检查(Versioning Check)，以使账本的当前状态达成一致。最后的这步检查提供非常必要的保护，以避免双重支出操作和其他可能危及数据完整性的威胁，并允许针对非静态变量的函数执行。
 
 除了大量的背书(Endorsement)，确认(Validity)和版本检查(Versioning Check)之外，身份验证也同时在交易流程的所有方向进行着。访问控制列表在分层的网络结构上实现（排序服务(Ordering Service)到频道(Channel)），并且，当交易提议(Transaction Proposal)通过不同的构件时，负载数据将被多次签名(Signed)，验证(Verified)和认证(Authenticated)。总而言之，共识(Consensus)不仅限于代表一组批量交易的商议顺序，还包括了发生在整个交易的过程期间的，从提议(Proposal)到提交(Commitment)，的持续不断的各种校验。
 
