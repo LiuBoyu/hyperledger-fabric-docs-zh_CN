@@ -67,7 +67,7 @@ Hyperledger Fabric在每个频道(Channel)的基础上使用了一个不可变�
 安全及会员服务(Security-Membership-Services)
 --------------------------------------------
 
-Hyperledger Fabric巩固了所有参与者都拥有已知身份的交易网络。公钥基础设施用于生成加密证书，加密证书与组织机构，网络组件、最终用户或客户端应用相绑定。因此，数据访问控制可以在更广泛的网络和渠道层面进行管理和维护。 在 Hyperledger Fabric 中，这个“具有权限的(permissioned)”的概念与“频道(channel)”的存在和能力相关联，这有助于解决将隐私性和机密性放在首要位置的场景。
+Hyperledger Fabric巩固了所有参与者都拥有已知身份的交易网络。公钥基础设施(Public Key Infrastructure - PKI)用于生成加密证书，加密证书与组织机构，网络组件、最终用户或客户端应用相绑定。因此，数据访问控制可以在更广泛的网络和渠道层面进行管理和维护。在 Hyperledger Fabric 中，这个“具有权限的(permissioned)”的概念与“频道(channel)”的存在和能力相关联，这有助于解决将隐私性和机密性放在首要位置的场景。
 
 请参阅 :doc:`msp` 主题以更好地理解 Hyperledger Fabric 的加密实现及相关的签名，校验，鉴权方法。
 
@@ -80,7 +80,7 @@ Hyperledger Fabric巩固了所有参与者都拥有已知身份的交易网络�
 
 当一个区块内所有交易的顺序和结果都已经明确地按策略标准检查后，共识(Consensus)最终达成。这些检查发生在交易的整个生命周期，包括使用背书策略(Endorsement Policy)来决定哪些特定的会员(Member)必须背书(Endorse)某个特定的交易类型，以及，使用系统链码(System Chaincode)来确保这些策略得到执行和维护。提交之前，节点们(Peers)将调用这些系统链码(System Chaincode)，以确保获得来自适当实体(The Appropriate Entities)的足够数量的背书(Endorsement)。而且，在任何一个包含交易的区块被附加进账本之前，都会进行版本检查(Versioning Check)，以使账本的当前状态达成一致。最后的这步检查提供非常必要的保护，以避免双重支出操作和其他可能危及数据完整性的威胁，并允许针对非静态变量的函数执行。
 
-除了大量的背书(Endorsement)，确认(Validity)和版本检查(Versioning Check)之外，身份验证也同时在交易流程的所有方向进行着。访问控制列表在分层的网络结构上实现（排序服务(Ordering Service)到频道(Channel)），并且，当交易提议(Transaction Proposal)通过不同的构件时，负载数据将被多次签名(Signed)，验证(Verified)和认证(Authenticated)。总而言之，共识(Consensus)不仅限于代表一组批量交易的商议顺序，还包括了发生在整个交易的过程期间的，从提议(Proposal)到提交(Commitment)，的持续不断的各种校验。
+除了大量的背书(Endorsement)，确认(Validity)和版本检查(Versioning Check)之外，身份验证也同时在交易流程的所有方向进行着。访问控制列表在分层的网络结构上实现（排序服务(Ordering Service)到频道(Channel)），并且，当交易提议(Transaction Proposal)通过不同的构件时，负载数据将被多次签名(Signed)，验证(Verified)和认证(Authenticated)。总而言之，共识(Consensus)不仅限于代表一组批量交易的商议顺序，还包括了发生在整个交易的过程期间的，从提议(Proposal)到提交(Commitment)的持续不断的各种校验。
 
 查看 :doc:`txflow` 图表以更直观的理解共识。
 
