@@ -51,12 +51,12 @@ Read the Docs: [Hyperledger Fabric v1.0 官方文档（英文原版）](http://h
 | Architecture Explained                         | arch-deep-dive           |  831 | - |
 | Transaction Flow                               | txflow                   |  117 | DONE |
 | Hyperledger Fabric CA's User Guide             |                 -        |    - | - |
-| Hyperledger Fabric SDKs                        | fabric-sdks              |   13 | - |
+| Hyperledger Fabric SDKs                        | fabric-sdks              |   13 | DOING |
 | Bringing up a Kafka-based Ordering Service     | kafka                    |   96 | - |
-| Channels                                       | channels                 |   44 | - |
+| Channels                                       | channels                 |   44 | DOING |
 | Ledger                                         | ledger                   |  168 | - |
 | Read-Write set semantics                       | readwrite                |  154 | - |
-| Gossip data dissemination protocol             | gossip                   |   87 | - |
+| Gossip data dissemination protocol             | gossip                   |   87 | DONE |
 | TROUBLESHOOTING AND FAQS                       |                          |      |   |
 | Hyperledger Fabric FAQ                         | Fabric-FAQ               |  171 | - |
 | APPENDIX                                       |                          |      |   |
