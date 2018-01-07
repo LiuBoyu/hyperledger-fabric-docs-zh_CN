@@ -31,7 +31,7 @@ Business:
 
 .. toctree::
    :maxdepth: 2
-   :caption: Getting Started
+   :caption: 入门
 
    prereqs
    getting_started
@@ -39,7 +39,7 @@ Business:
 
 .. toctree::
    :maxdepth: 2
-   :caption: Key Concepts
+   :caption: 关键概念
 
    blockchain
    capabilities
@@ -48,7 +48,7 @@ Business:
 
 .. toctree::
    :maxdepth: 2
-   :caption: Tutorials
+   :caption: 教程
 
    build_network
    write_first_app
@@ -59,7 +59,7 @@ Business:
 
 .. toctree::
    :maxdepth: 2
-   :caption: Operations Guide
+   :caption: 操作指南
 
    msp
    configtx
@@ -71,11 +71,11 @@ Business:
 
 .. toctree::
    :maxdepth: 2
-   :caption: Architecture
+   :caption: 架构
 
    arch-deep-dive
    txflow
-   Hyperledger Fabric CA's User Guide <http://hyperledger-fabric-ca.readthedocs.io/en/latest>
+   Hyperledger Fabric CA 用户手册 <http://hyperledger-fabric-ca.readthedocs.io/en/latest>
    fabric-sdks
    kafka
    channels
@@ -85,13 +85,13 @@ Business:
 
 .. toctree::
    :maxdepth: 2
-   :caption: Troubleshooting and FAQs
+   :caption: 疑难解答和常见问题
 
    Fabric-FAQ
 
 .. toctree::
    :maxdepth: 2
-   :caption: Appendix
+   :caption: 附录
 
    glossary
 
