@@ -1,12 +1,10 @@
 Hyperledger Fabric SDKs
 =======================
 
-Hyperledger Fabric intends to offer a number of SDKs for a wide variety of
-programming languages. The first two delivered are the Node.js and Java
-SDKs. We hope to provide Python and Go SDKs soon after the 1.0.0 release.
+Hyperledger Fabric旨在为各种编程语言提供大量的SDK。目前已交付的两个是 Node.js 和 Java 的SDK。我们希望在1.0.0版本发布后尽快提供 Python 和 Go 的SDK。
 
-  * `Hyperledger Fabric Node SDK documentation <https://fabric-sdk-node.github.io/>`__.
-  * `Hyperledger Fabric Java SDK documentation <https://github.com/hyperledger/fabric-sdk-java>`__.
+  * `Hyperledger Fabric Node SDK 文档 <https://fabric-sdk-node.github.io/>`__.
+  * `Hyperledger Fabric Java SDK 文档 <https://github.com/hyperledger/fabric-sdk-java>`__.
 
 .. Licensed under Creative Commons Attribution 4.0 International License
    https://creativecommons.org/licenses/by/4.0/
