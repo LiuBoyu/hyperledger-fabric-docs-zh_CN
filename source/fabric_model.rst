@@ -1,4 +1,6 @@
-*此章节由 刘博宇 翻译，最后更新于2018.1.3*
+*此章节由 刘博宇 翻译，最后更新于2018.1.3* （`原文链接`_）
+
+.. _`原文链接`: http://hyperledger-fabric.readthedocs.io/en/latest/fabric_model.html
 
 Hyperledger Fabric 模型
 ========================

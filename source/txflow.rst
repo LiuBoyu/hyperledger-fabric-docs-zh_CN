@@ -1,4 +1,6 @@
-*此章节由 刘博宇 翻译，最后更新于2018.1.4*
+*此章节由 刘博宇 翻译，最后更新于2018.1.4* （`原文链接`_）
+
+.. _`原文链接`: http://hyperledger-fabric.readthedocs.io/en/latest/txflow.html
 
 交易流程
 =========
@@ -60,7 +62,7 @@
 
 每个节点(Peer)都会将此区块(Block)追加到所在频道(Channel)的链中，并且对于每一笔有效的交易，写集合都会被提交给当前的状态数据库(State Database)。同时，一个事件被触发，通知客户端应用程序此交易（调用）已被永久地追加到链中，以及，此交易是有效还是无效。
 
-**注意**: 请参阅 :ref:`swimlane` 图表以更好地了解服务器端流程和 protobuffers 。
+.. note:: 请参阅 :ref:`swimlane` 图表以更好地了解服务器端流程和 protobuffers 。
 
 .. Licensed under Creative Commons Attribution 4.0 International License
    https://creativecommons.org/licenses/by/4.0/

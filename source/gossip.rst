@@ -1,4 +1,6 @@
-*此章节由 刘博宇 翻译，最后更新于2018.1.5*
+*此章节由 刘博宇 翻译，最后更新于2018.1.5* （`原文链接`_）
+
+.. _`原文链接`: http://hyperledger-fabric.readthedocs.io/en/latest/gossip.html
 
 Gossip数据传播协议
 ====================
