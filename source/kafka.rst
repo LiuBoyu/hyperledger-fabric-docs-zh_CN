@@ -1,95 +1,108 @@
-Bringing up a Kafka-based Ordering Service
-===========================================
+*此章节由 刘博宇 翻译，最后更新于2018.1.9* （`原文链接`_）
 
-Caveat emptor
--------------
+.. _`原文链接`: http://hyperledger-fabric.readthedocs.io/en/latest/kafka.html
 
-This document assumes that the reader generally knows how to set up a Kafka cluster and a ZooKeeper ensemble. The purpose of this guide is to identify the steps you need to take so as to have a set of Hyperledger Fabric ordering service nodes (OSNs) use your Kafka cluster and provide an ordering service to your blockchain network.
+基于 Kafka 的排序服务(Ordering Service)
+========================================
 
-Big picture
------------
+前言
+------
 
-Each channel maps to a separate single-partition topic in Kafka. When an OSN receives transactions via the ``Broadcast`` RPC, it checks to make sure that the broadcasting client has permissions to write on the channel, then relays (i.e. produces) those transactions to the appropriate partition in Kafka. This partition is also consumed by the OSN which groups the received transactions into blocks locally, persists them in its local ledger, and serves them to receiving clients via the ``Deliver`` RPC. For low-level details, refer to `the document that describes how we came to this design <https://docs.google.com/document/d/1vNMaM7XhOlu9tB_10dKnlrhy5d7b1u8lSY8a-kVjCO4/edit>`_ — Figure 8 is a schematic representation of the process described above.
+本文假设读者已经知道如何配置Kafka集群和ZooKeeper集合。本指南的目的是帮助您了解所需执行的步骤，以使一组 Hyperledger Fabric 排序服务节点（Ordering Service Node - OSN）可以使用您的Kafka群集，并向区块链网络提供排序服务。
 
-Steps
+重点
+------
+
+每一个频道(Channel)都会映射到Kafka中的一个独立的单分区主题(a separate single-partition topic)。当排序服务节点（Ordering Service Node - OSN）通过 ``广播(Broadcast)`` RPC接收到交易(Transaction)时，它会进行检查以确保广播客户端拥有写入频道(Channel)的权限，然后，将这些交易(Transaction)转发(relay)（即，生产）至Kafka中的适当分区中。这个分区也会被排序服务节点（Ordering Service Node - OSN）使用，OSN将接收到的交易(Transaction)分组打包成本地区块(Block)，然后，将它们保存在本地的帐本(Ledger)中，并通过 ``分发(Deliver)`` RPC 发送给接收的客户端。对于低层细节，请参考文档 `基于Kafka的Fabric排序服务 <http://wutongtree.github.io/translations/Kafka-based-Ordering-Service_zh>`_ ( `英文原文 <https://docs.google.com/document/d/1vNMaM7XhOlu9tB_10dKnlrhy5d7b1u8lSY8a-kVjCO4/edit>`_ ) - 图8是对上述过程的概要表述。
+
+步骤
 -----
 
-Let ``K`` and ``Z`` be the number of nodes in the Kafka cluster and the ZooKeeper ensemble respectively:
+设 ``K`` 和 ``Z`` 分别为Kafka集群和ZooKeeper集合的节点数量：
 
-#. At a minimum, ``K`` should be set to 4. (As we will explain in Step 4 below,  this is the minimum number of nodes necessary in order to exhibit crash fault tolerance, i.e. with 4 brokers, you can have 1 broker go down, all channels will continue to be writeable and readable, and new channels can be created.)
-#. ``Z`` will either be 3, 5, or 7. It has to be an odd number to avoid split-brain scenarios, and larger than 1 in order to avoid single point of failures. Anything beyond 7 ZooKeeper servers is considered an overkill.
+#. ``K`` 应该至少设置为4。（正如我们将在下面的步骤4中所解释的，这是宕机故障容错所必需的最小节点数量，即，对于4个代理人(Broker)，可以有1个代理人(Broker)宕机，所有频道(Channel)将仍然可以继续读写，并且也可以创建新的频道(Channel)。）
 
-Then proceed as follows:
+#. ``Z`` 可以是3,5或7。它必须是奇数，以避免令人头痛(split-brain)的情况发生，并且，为了避免单点故障，必须大于1。如果超过7台ZooKeeper服务器，则是完全没有必要的。
 
-3. Orderers: **Encode the Kafka-related information in the network's genesis block.** If you are using ``configtxgen``, edit ``configtx.yaml`` —or pick a preset profile for the system channel's genesis block—  so that:
+然后按以下步骤进行：
 
-   #. ``Orderer.OrdererType`` is set to ``kafka``.
-   #. ``Orderer.Kafka.Brokers`` contains the address of *at least two* of the Kafka brokers in your cluster in ``IP:port`` notation. The list does not need to be exhaustive. (These are your bootstrap brokers.)
+3. 排序服务(Orderers): **对网络中创世区块(Genesis Block)里的Kafka相关信息进行编码** ，如果您使用 ``configtxgen`` ,请编辑 ``configtx.yaml`` ，或为系统频道的创世区块，选择一个预设的配置文件。 
 
-#. Orderers: **Set the maximum block size.** Each block will have at most `Orderer.AbsoluteMaxBytes` bytes (not including headers), a value that you can set in ``configtx.yaml``. Let the value you pick here be ``A`` and make note of it — it will affect how you configure your Kafka brokers in Step 6.
-#. Orderers: **Create the genesis block.** Use ``configtxgen``. The settings you picked in Steps 3 and 4 above are system-wide settings, i.e. they apply across the network for all the OSNs. Make note of the genesis block's location.
-#. Kafka cluster: **Configure your Kafka brokers appropriately.** Ensure that every Kafka broker has these keys configured:
+   #. ``Orderer.OrdererType`` 设置为 ``kafka`` 。
+   #. ``Orderer.Kafka.Brokers`` 需要包括 *至少两个* 在集群中的Kafka代理的节点地址，以 ``IP:port`` 的形式。该清单并不需要列出所有的节点地址。（这只是引导启动节点。）
 
-   #. ``unclean.leader.election.enable = false`` — Data consistency is key in a blockchain environment. We cannot have a channel leader chosen outside of the in-sync replica set, or we run the risk of overwriting the offsets that the previous leader produced, and —as a result— rewrite the blockchain that the orderers produce.
-   #. ``min.insync.replicas = M`` — Where you pick a value ``M`` such that ``1 < M < N`` (see ``default.replication.factor`` below). Data is considered committed when it is written to at least ``M`` replicas (which are then considered in-sync and belong to the in-sync replica set, or ISR). In any other case, the write operation returns an error. Then:
+#. 排序服务(Orderers): **设置最大的区块大小** ，每个区块最大为 `Orderer.AbsoluteMaxBytes` 个字节（不包括区块头），您可以在 ``configtx.yaml`` 中设置这个值。将这个值标记为 ``A`` ，并记下它。这将影响您如何在步骤6中配置Kafka代理。
 
-      #. If up to ``N-M`` replicas —out of the ``N`` that the channel data is written to— become unavailable, operations proceed normally.
-      #. If more replicas become unavailable, Kafka cannot maintain an ISR set of ``M,`` so it stops accepting writes. Reads work without issues. The channel becomes writeable again when ``M`` replicas get in-sync.
+#. 排序服务(Orderers): **创建创世区块** ，使用 ``configtxgen`` 。您在上面的步骤3和步骤4中的配置是系统范围的配置，即它们适用于整个OSN网络。然后，记下创世区块的位置。
 
-   #. ``default.replication.factor = N`` — Where you pick a value ``N`` such that ``N < K``. A replication factor of ``N`` means that each channel will have its data replicated to ``N`` brokers. These are the candidates for the ISR set of a channel. As we noted in the ``min.insync.replicas section`` above, not all of these brokers have to be available all the time. ``N`` should be set *strictly smaller* to ``K`` because channel creations cannot go forward if less than ``N`` brokers are up. So if you set ``N = K``, a single broker going down means that no new channels can be created on the blockchain network — the crash fault tolerance of the ordering service is non-existent.
+#. Kafka集群: **正确地配置您的Kafka代理** ，确保每一个Kafka代理，都进行了如下的关键配置：
 
-      Based on what we've described above, the minimum allowed values for ``M`` and ``N`` are 2 and 3 respectively. This configuration allows for the creation of new channels to go forward, and for all channels to continue to be writeable.
-   #. ``message.max.bytes`` and ``replica.fetch.max.bytes`` should be set to a value larger than ``A``, the value you picked in ``Orderer.AbsoluteMaxBytes`` in Step 4 above. Add some buffer to account for headers — 1 MiB is more than enough. The following condition applies:
+   #. ``unclean.leader.election.enable = false`` — 数据一致性是区块链环境的关键。我们不能在同步副本集合之外选择频道的领导者，否则我们面临前任领导者生成的内容被重写的风险，并且因此导致重写排序节点生成的区块链。
+
+   #. ``min.insync.replicas = M`` — 选择一个值 ``M`` ，使得 ``1 < M < N`` （请参阅下面的 ``default.replication.factor`` ）。当数据被写入至少 ``M`` 个副本时，数据被视为已提交，（然后将其视为同步并从属于同步副本集合或ISR）。在任何其他情况下，写操作都会返回一个错误。然后：
+
+      #. 如果 ``N-M`` 个副本不可用时，操作可以正常进行。
+      #. 如果更多的副本变得不可用，Kafka将不能维持 ``M`` 的ISR集合，所以它将停止写入。读取没有问题。当 ``M`` 个副本进入同步状态时，频道将再次变为可写入状态。
+
+   #. ``default.replication.factor = N`` — 选择一个值 ``N`` ，使得 ``N < K`` 。副本因子 ``N`` 表示每个频道将其数据复制给 ``N`` 个代理。这些是频道ISR集合的候选者。正如我们在上面的 ``min.insync.replicas section`` 部分中提到的，并非所有代理都必须始终可用。 ``N`` 应该设置为 *严格小于* ``K``，因为如果少于 ``N`` 个代理，就无法创建频道。因此，如果设置 ``N = K`` ，则单个代理停机，意味着在区块链网络中将不能创建新的频道 - 排序服务的崩溃容错功能将不复存在。
+
+      根据上面所描述的， ``M`` 和 ``N`` 的最小值分别是2和3。 这个配置能保证，如果存在异常，将能依然允许创建新的频道，并保证所有的频道仍然是可写的。
+
+   #. ``message.max.bytes`` 和 ``replica.fetch.max.bytes`` 应设置为大于 ``A`` 的值, 即上面步骤4中，您在 ``Orderer.AbsoluteMaxBytes`` 中设置的值。为账户头添加一些缓冲的空间，1 MiB是足够用的。以下适用：
 
       ::
 
          Orderer.AbsoluteMaxBytes < replica.fetch.max.bytes <= message.max.bytes
 
-      (For completeness, we note that ``message.max.bytes`` should be strictly smaller to ``socket.request.max.bytes`` which is set by default to 100 MiB. If you wish to have blocks larger than 100 MiB you will need to edit the hard-coded value in ``brokerConfig.Producer.MaxMessageBytes`` in ``fabric/orderer/kafka/config.go`` and rebuild the binary from source. This is not advisable.)
-   #. ``log.retention.ms = -1``. Until the ordering service adds support for pruning of the Kafka logs, you should disable time-based retention and prevent segments from expiring. (Size-based retention —see ``log.retention.bytes``— is disabled by default in Kafka at the time of this writing, so there's no need to set it explicitly.)
+      （为了完整性，我们注意到 ``message.max.bytes`` 应该严格的小于 ``socket.request.max.bytes`` ，默认设置为100 MiB。如果你希望区块大于100 MiB，你需要修改 ``fabric/orderer/kafka/config.go`` 中 ``brokerConfig.Producer.MaxMessageBytes`` 的值，并从源码重新进行编译。不建议这么做。）
 
-#. Orderers: **Point each OSN to the genesis block.** Edit ``General.GenesisFile`` in ``orderer.yaml`` so that it points to the genesis block created in Step 5 above. (While at it, ensure all other keys in that YAML file are set appropriately.)
-#. Orderers: **Adjust polling intervals and timeouts.** (Optional step.)
+   #. ``log.retention.ms = -1`` - 在排序服务(Ordering Service)添加对裁剪Kafka日志的支持之前，您应该禁用基于时间的留存并防止片段(segments)过期。（基于文件大小的留存 - 请参阅 ``log.retention.bytes`` - 写这篇文章时，在Kafka中是默认禁用的，所以不需要明确设置。）
 
-   #. The ``Kafka.Retry`` section in the ``orderer.yaml`` file allows you to adjust the frequency of the metadata/producer/consumer requests, as well as the socket timeouts. (These are all settings you would expect to see in a Kafka producer or consumer.)
-   #. Additionally, when a new channel is created, or when an existing channel is reloaded (in case of a just-restarted orderer), the orderer interacts with the Kafka cluster in the following ways:
+#. 排序服务(Orderers): **将每个OSN都指向创世区块** ，编辑 ``orderer.yaml`` 中的 ``General.GenesisFile`` ，以使其指向步骤5中所创建的创始区块。（在此过程中，确保YAML文件中，其他的所有键值，都被正确的设置过。）
 
-      #. It creates a Kafka producer (writer) for the Kafka partition that corresponds to the channel.
-      #. It uses that producer to post a no-op ``CONNECT`` message to that partition.
-      #. It creates a Kafka consumer (reader) for that partition.
+#. 排序服务(Orderers): **调整轮询间隔和超时** （可选步骤）
 
-      If any of these steps fail, you can adjust the frequency with which they are repeated. Specifically they will be re-attempted every ``Kafka.Retry.ShortInterval`` for a total of ``Kafka.Retry.ShortTotal``, and then every ``Kafka.Retry.LongInterval`` for a total of ``Kafka.Retry.LongTotal`` until they succeed. Note that the orderer will be unable to write to or read from a channel until all of the steps above have been completed successfully.
+   #. ``orderer.yaml`` 文件中的 ``Kafka.Retry`` 一节，允许您调整 元数据/生产者/消费者 请求的频率，以及 socket 超时。（这也是Kafka生产者或消费者的所有配置。）
+   #. 另外，当一个新的频道(Channel)被创建，或者当一个现有的(Channel)被重新加载时（例如，刚刚重新启动的排序服务(orderer)），排序服务(orderer)将以下面的方式与Kafka集群进行交互：
 
-#. **Set up the OSNs and Kafka cluster so that they communicate over SSL.** (Optional step, but highly recommended.) Refer to `the Confluent guide <http://docs.confluent.io/2.0.0/kafka/ssl.html>`_ for the Kafka cluster side of the equation, and set the keys under ``Kafka.TLS`` in ``orderer.yaml`` on every OSN accordingly.
-#. **Bring up the nodes in the following order: ZooKeeper ensemble, Kafka cluster, ordering service nodes.**
+      #. 它为该频道(Channel)所对应的Kafka分区，创建一个Kafka生产者（写入者）。
+      #. 它使生产者发布一个 ``CONNECT`` 消息到该分区。
+      #. 它为该分区创建一个Kafka消费者（读取者）。
 
-Additional considerations
+      如果这些步骤，有任何一个失败，您可以调整重复的频率。具体来说，他们将会不断地重新尝试在 ``Kafka.Retry.ShortTotal`` 中，以 ``Kafka.Retry.ShortInterval`` 为间隔，然后，在 ``Kafka.Retry.LongTotal`` 中，以 ``Kafka.Retry.LongInterval`` 为间隔，直到成功为止。请注意，直到上述所有步骤都成功完成之前，排序服务(orderer)将无法写入或读取频道(Channel)。
+
+#. **设置OSNs和Kafka集群，以使其可以通过SSL进行通信** （可选步骤，但强烈建议），请参阅 `the Confluent guide <http://docs.confluent.io/2.0.0/kafka/ssl.html>`_ 以更进一步了解Kafka集群，在每个OSN的 ``orderer.yaml`` 中，为 ``Kafka.TLS`` 进行设置。
+
+#. **按照如下顺序启动各服务节点：ZooKeeper集合，Kafka集群，排序服务节点(Ordering Service Node)**
+
+其他注意事项
 -------------------------
 
-#. **Preferred message size.** In Step 4 above (see `Steps`_ section) you can also set the preferred size of blocks by setting the ``Orderer.Batchsize.PreferredMaxBytes`` key. Kafka offers higher throughput when dealing with relatively small messages; aim for a value no bigger than 1 MiB.
-#. **Using environment variables to override settings.** When using the sample Kafka and Zookeeper Docker images provided with Fabric (see ``images/kafka`` and ``images/zookeeper`` respectively), you can override a Kafka broker or a ZooKeeper server's settings by using environment variables. Replace the dots of the configuration key with underscores — e.g. ``KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false`` will allow you to override the default value of ``unclean.leader.election.enable``. The same applies to the OSNs for their *local* configuration, i.e. what can be set in ``orderer.yaml``. For example ``ORDERER_KAFKA_RETRY_SHORTINTERVAL=1s`` allows you to override the default value for ``Orderer.Kafka.Retry.ShortInterval``.
+#. **首选区块大小(Preferred Message Size)** 。在上面的步骤4中（参见 `步骤`_ 一节），您也可以通过设置 ``Orderer.Batchsize.PreferredMaxBytes`` ，来配置区块(Block)的大小。Kafka在处理相对较小的消息时，可以提供更高的吞吐量，其设计目标为不超过1MiB。
 
-Supported Kafka versions and upgrading
---------------------------------------
+#. **使用环境变量来覆盖配置** 。当使用Fabric提供的示例 Kafka 和 Zookeeper 的Docker镜像时（分别参见 ``images/kafka`` 和 ``images/zookeeper`` ），您可以使用环境变量，来覆盖Kafka代理或ZooKeeper服务器的配置。用 ``_`` 替换属性名称里的 ``.`` ，例如 ``KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false`` 将允许您覆盖 ``unclean.leader.election.enable`` 的默认值。OSN的 *本地配置* 也同样如此，也就是说，可以在 ``orderer.yaml`` 中进行配置。例如，``ORDERER_KAFKA_RETRY_SHORTINTERVAL=1s`` 允许您覆盖 ``Orderer.Kafka.Retry.ShortInterval`` 的默认值。
 
-Fabric uses the `sarama client library <https://github.com/Shopify/sarama>`_ and vendors a version of it that supports the following Kafka client versions:
+支持的Kafka版本
+-----------------
 
-* ``Version: 0.9.0``
-* ``Version: 0.10.0``
-* ``Version: 0.10.1``
-* ``Version: 0.10.2``
+Fabric使用 `sarama客户端库 <https://github.com/Shopify/sarama>`_ 并支持以下的Kafka客户端版本：
 
-The sample Kafka server image provided by Fabric contains Kafka server version ``0.10.2``. Out of the box, Fabric's ordering service nodes default to configuring their embedded Kafka client to match this version. If you are not using the sample Kafka server image provided by Fabric, ensure that you configure a Kafka client version that is compatible with your Kafka server using the ``Kafka.Version`` key in ``orderer.yaml``.
+* ``版本: 0.9.0``
+* ``版本: 0.10.0``
+* ``版本: 0.10.1``
+* ``版本: 0.10.2``
 
-Debugging
----------
+Fabric提供的示例Kafka服务器映像包含了Kafka服务端版本 ``0.10.2`` 。Fabric的排序服务节点(Ordering Service Node - OSN)内置了Kafka客户端，并进行了默认配置，以匹配此版本，可以直接投入使用。如果您没有使用Fabric提供的示例Kafka服务器映像，请确保 ``orderer.yaml`` 中的 ``Kafka.Version`` 属性，进行了相关的配置，以兼容您的Kafka服务端版本。
 
-Set ``General.LogLevel`` to ``DEBUG`` and ``Kafka.Verbose`` in ``orderer.yaml`` to ``true``.
+调试
+------
 
-Example
--------
+设置 ``General.LogLevel`` 为 ``DEBUG`` ，并在 ``orderer.yaml`` 中，设置 ``Kafka.Verbose`` 为 ``true`` .
 
-Sample Docker Compose configuration files inline with the recommended settings above can be found under the ``fabric/bddtests`` directory. Look for ``dc-orderer-kafka-base.yml`` and ``dc-orderer-kafka.yml``.
+例子
+------
+
+Sample Docker Compose的配置文件中，包含了上面推荐的设置，可以在目录 ``fabric/bddtests`` 中找到。查找 ``dc-orderer-kafka-base.yml`` 和 ``dc-orderer-kafka.yml`` 。
 
 .. Licensed under Creative Commons Attribution 4.0 International License
    https://creativecommons.org/licenses/by/4.0/

@@ -52,7 +52,7 @@ Read the Docs: [Hyperledger Fabric v1.0 官方文档（英文原版）](http://h
 | Transaction Flow                               | txflow                   |  117 | DONE |
 | Hyperledger Fabric CA's User Guide             |                 -        |    - | - |
 | Hyperledger Fabric SDKs                        | fabric-sdks              |   13 | DONE |
-| Bringing up a Kafka-based Ordering Service     | kafka                    |   96 | TODO |
+| Bringing up a Kafka-based Ordering Service     | kafka                    |   96 | DONE |
 | Channels                                       | channels                 |   44 | DONE |
 | Ledger                                         | ledger                   |  168 | TODO |
 | Read-Write set semantics                       | readwrite                |  154 | TODO |
