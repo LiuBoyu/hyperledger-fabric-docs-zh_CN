@@ -1,51 +1,33 @@
-Building Your First Network
-===========================
+*此章节由 刘博宇 翻译，最后更新于2018.1.10* （`原文链接`_）
 
-.. note:: These instructions have been verified to work against the
-          version "1.0.3" tagged Docker images and the pre-compiled
-          setup utilities within the supplied tar file. If you run
-          these commands with images or tools from the current master
-          branch, it is possible that you will see configuration and panic
-          errors.
+.. _`原文链接`: http://hyperledger-fabric.readthedocs.io/en/latest/build_network.html
 
-The build your first network (BYFN) scenario provisions a sample Hyperledger
-Fabric network consisting of two organizations, each maintaining two peer
-nodes, and a "solo" ordering service.
+构建你的第一个网络
+===================
 
-Install prerequisites
----------------------
+.. note:: 此文档已经被验证过，基于 "1.0.3" 版本的Docker镜像和预编译的安装实用程序。如果你使用当前主分支中的镜像和工具运行这些命令，则有可能需要修改配置或遇到错误。
 
-Before we begin, if you haven't already done so, you may wish to check that
-you have all the :doc:`prereqs` installed on the platform(s)
-on which you'll be developing blockchain applications and/or operating
-Hyperledger Fabric.
+“构建你的第一个网络”（BYFN）场景提供了一个示例性的 Hyperledger Fabric 网络，包括了两个组织机构(Organization)，每个组织机构(Organization)都拥有两个对等节点(Peer)，并提供“单独”的排序服务(Ordering Service)。
 
-You will also need to download and install the :doc:`samples`. You will notice
-that there are a number of samples included in the ``fabric-samples``
-repository. We will be using the ``first-network`` sample. Let's open that
-sub-directory now.
+前提条件
+----------
+
+在我们开始之前，如果你还尚未这样做，最好检查一下是否安装了所有的 :doc:`prereqs` ，在要开发区块链应用程序或操作 Hyperledger Fabric 的平台之上。
+
+你还需要下载并安装 :doc:`samples` 。你会注意在 ``fabric-samples`` 的源码中，包含了大量的例子。我们将使用 ``first-network`` 这个例子。现在打开这个子目录。
 
 .. code:: bash
 
   cd first-network
 
-.. note:: The supplied commands in this documentation
-          **MUST** be run from your ``first-network`` sub-directory
-          of the ``fabric-samples`` repository clone.  If you elect to run the
-          commands from a different location, the various provided scripts
-          will be unable to find the binaries.
+.. note:: 本文档中所提及的命令 **必须** 在 ``fabric-samples`` 源码的 ``first-network`` 子目录中运行。如果你选择从其他位置运行命令，则提供的各种脚本将无法找到所需的可执行文件。
 
-Want to run it now?
--------------------
+想要现在就运行起来？
+--------------------
 
-We provide a fully annotated script - ``byfn.sh`` - that leverages these Docker
-images to quickly bootstrap a Hyperledger Fabric network comprised of 4 peers
-representing two different organizations, and an orderer node. It will also
-launch a container to run a scripted execution that will join peers to a
-channel, deploy and instantiate chaincode and drive execution of transactions
-against the deployed chaincode.
+我们提供了一个完整注释的脚本 - ``byfn.sh`` - 利用这些Docker镜像，可以快速地启动包括2个组织机构(Organization)，4个节点(Peer)组成的 Hyperledger Fabric 网络和一个排序服务节点(orderer node)。它还将启动一个容器来运行脚本，将节点(Peer)加入到一个频道(Channel)中，部署和实例化链码(Chaincode)，并根据所部署的链码(Chaincode)来执行交易(Transaction)。
 
-Here's the help text for the ``byfn.sh`` script:
+以下是 ``byfn.sh`` 脚本的帮助信息：
 
 .. code:: bash
 
@@ -67,22 +49,18 @@ Here's the help text for the ``byfn.sh`` script:
     byfn.sh -m generate -c <channelname>
     byfn.sh -m up -c <channelname>
 
-If you choose not to supply a channel name, then the
-script will use a default name of ``mychannel``.  The CLI timeout parameter
-(specified with the -t flag) is an optional value; if you choose not to set
-it, then your CLI container will exit upon conclusion of the script.
+如果你没有指定频道(Channel)的名称，则脚本将使用默认名称 ``mychannel`` 。CLI超时参数（使用 -t 标志）是一个可选值，如果你选择不设置它，那么你的CLI容器将在脚本结束时退出。
 
-Generate Network Artifacts
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+生成网络构件(Network Artifacts)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Ready to give it a go? Okay then! Execute the following command:
+准备好让它运行起来了吗？OK！执行如下的命令：
 
 .. code:: bash
 
   ./byfn.sh -m generate
 
-You will see a brief description as to what will occur, along with a yes/no command line
-prompt. Respond with a ``y`` to execute the described action.
+你将会看到一段简要的说明，描述了接下来将会发生什么，以及 yes/no 的命令行提示。按下 ``y`` 以执行相关的动作。
 
 .. code:: bash
 
@@ -129,22 +107,18 @@ prompt. Respond with a ``y`` to execute the described action.
   2017-06-12 21:01:37.704 EDT [common/configtx/tool] doOutputAnchorPeersUpdate -> INFO 002 Generating anchor peer update
   2017-06-12 21:01:37.704 EDT [common/configtx/tool] doOutputAnchorPeersUpdate -> INFO 003 Writing anchor peer update
 
-This first step generates all of the certificates and keys for all our various
-network entities, the ``genesis block`` used to bootstrap the ordering service,
-and a collection of configuration transactions required to configure a
-:ref:`Channel`.
+第一步为我们所有的网络实体生成了所需的证书和密钥，以及用于启动排序服务(Ordering Service)的 ``创世区块(Genesis Block)`` 以及一组用来配置 :ref:`频道(Channel)` 的配置交易(configuration transactions)。
 
-Bring Up the Network
-^^^^^^^^^^^^^^^^^^^^
+启动网络
+^^^^^^^^^^
 
-Next, you can bring the network up with the following command:
+接下来，你可以使用如下命令来启动网络：
 
 .. code:: bash
 
   ./byfn.sh -m up
 
-Once again, you will be prompted as to whether you wish to continue or abort.
-Respond with a ``y``:
+再一次，你会被提示，是否要继续还是中断，回应 ``y`` ：
 
 .. code:: bash
 
@@ -169,9 +143,7 @@ Respond with a ``y``:
   Channel name : mychannel
   Creating channel...
 
-The logs will continue from there. This will launch all of the containers, and
-then drive a complete end-to-end application scenario. Upon successful
-completion, it should report the following in your terminal window:
+日志将从这里开始。这将启动所有的容器，然后完成一个完整的端到端的应用场景。成功完成后，在终端窗口中，会得到以下的报告内容：
 
 .. code:: bash
 
@@ -192,22 +164,18 @@ completion, it should report the following in your terminal window:
     | |___  | |\  | | |_| |
     |_____| |_| \_| |____/
 
-You can scroll through these logs to see the various transactions. If you don't
-get this result, then jump down to the :ref:`Troubleshoot` section and let's see
-whether we can help you discover what went wrong.
+你可以滚动浏览这些日志以查看各种交易。如果你没有看到这些，那么请查看 :ref:`疑难解答` 章节，看看我们能否帮助你发现问题的所在。
 
-Bring Down the Network
-^^^^^^^^^^^^^^^^^^^^^^
+关闭网络
+^^^^^^^^^^
 
-Finally, let's bring it all down so we can explore the network setup one step
-at a time. The following will kill your containers, remove the crypto material
-and four artifacts, and delete the chaincode images from your Docker Registry:
+最后，让我们把它全部都关闭掉，这样我们就可以逐步来探索网络的配置。接下来，将关闭您的容器，删除加密素材，以及四个构件(artifacts)，并从你的Docker注册表中删除链码镜像：
 
 .. code:: bash
 
   ./byfn.sh -m down
 
-Once again, you will be prompted to continue, respond with a ``y``:
+再一次，你会被提示是否继续，用 ``y`` 来回应：
 
 .. code:: bash
 
@@ -223,41 +191,21 @@ Once again, you will be prompted to continue, respond with a ``y``:
   Deleted: sha256:ed3230614e64e1c83e510c0c282e982d2b06d148b1c498bbdcc429e2b2531e91
   ...
 
-If you'd like to learn more about the underlying tooling and bootstrap mechanics,
-continue reading.  In these next sections we'll walk through the various steps
-and requirements to build a fully-functional Hyperledger Fabric network.
+如果你打算了解更多底层工具和引导机制的关于信息，请继续阅读下面的章节。在接下来的部分中，我们将介绍构建完整功能 Hyperledger Fabric 网络的各个步骤和相关要求。
 
-Crypto Generator
-----------------
+生成加密证书
+--------------
 
-We will use the ``cryptogen`` tool to generate the cryptographic material
-(x509 certs) for our various network entities.  These certificates are
-representative of identities, and they allow for sign/verify authentication to
-take place as our entities communicate and transact.
+我们使用 ``cryptogen`` 工具来为各种网络实体，生成加密素材（x509证书）。这些证书是代表了身份的标示，实体在进行通信和交易的时候，会利用这些证书来进行签名和验证身份。
 
-How does it work?
+它是如何工作的？
 ^^^^^^^^^^^^^^^^^
 
-Cryptogen consumes a file - ``crypto-config.yaml`` - that contains the network
-topology and allows us to generate a set of certificates and keys for both the
-Organizations and the components that belong to those Organizations.  Each
-Organization is provisioned a unique root certificate (``ca-cert``) that binds
-specific components (peers and orderers) to that Org.  By assigning each
-Organization a unique CA certificate, we are mimicking a typical network where
-a participating :ref:`Member` would use its own Certificate Authority.
-Transactions and communications within Hyperledger Fabric are signed by an
-entity's private key (``keystore``), and then verified by means of a public
-key (``signcerts``).
+Cryptogen使用包含了网络拓扑结构的 ``crypto-config.yaml`` 文件，并可以为组织机构和属于该机构的组件生成一组证书和密钥。每个组织机构都配备了一个唯一的根证书（ ``ca-cert`` ），将特定的组件（节点(Peer)和排序服务节点(orderer)）绑定到该机构之上。通过为每个组织机构分配一个唯一的CA证书，我们正在模拟一个典型的网络，其中 :ref:`会员(Member)` 将使用自己的CA证书颁发机构。Hyperledger Fabric中的交易和通信，都将由实体的私钥（ ``keystore`` ）进行签名，然后通过公钥（ ``signcerts`` ）进行验证。
 
-You will notice a ``count`` variable within this file.  We use this to specify
-the number of peers per Organization; in our case there are two peers per Org.
-We won't delve into the minutiae of `x.509 certificates and public key
-infrastructure <https://en.wikipedia.org/wiki/Public_key_infrastructure>`__
-right now. If you're interested, you can peruse these topics on your own time.
+你会注意到文件中的 ``count`` 变量。我们用这个来指定每个组织机构中节点(Peer)的数量。在我们的案例中，每个机构有两个节点(Peer)。我们现在不会深入研究 `x.509证书和公钥基础设施 <https://en.wikipedia.org/wiki/Public_key_infrastructure>`__ 的细节。如果你有兴趣，你可以自己找时间来仔细阅读这些资料。
 
-Before running the tool, let's take a quick look at a snippet from the
-``crypto-config.yaml``. Pay specific attention to the "Name", "Domain"
-and "Specs" parameters under the ``OrdererOrgs`` header:
+在运行该工具之前，让我们快速浏览一下 ``crypto-config.yaml`` 的代码片段。请特别注意 ``OrdererOrgs`` 标题下的 "Name" ， "Domain" 和 "Specs" 参数：
 
 .. code:: bash
 
@@ -289,110 +237,72 @@ and "Specs" parameters under the ``OrdererOrgs`` header:
   - Name: Org1
     Domain: org1.example.com
 
-The naming convention for a network entity is as follows -
-"{{.Hostname}}.{{.Domain}}".  So using our ordering node as a
-reference point, we are left with an ordering node named -
-``orderer.example.com`` that is tied to an MSP ID of ``Orderer``.  This file
-contains extensive documentation on the definitions and syntax.  You can also
-refer to the :doc:`msp` documentation for a deeper dive on MSP.
+网络实体的命名约定如下 - "{{.Hostname}}.{{.Domain}}" 。因此，将我们的排序节点作为参考，我们设置了一个名为 - ``orderer.example.com`` 的排序节点，该排序节点绑定到 ``Orderer`` 的MSP ID上。该文档包含有关定义和语法的大量描述，您也可以参阅 :doc:`msp` 文档，以深入了解MSP。
 
-After we run the ``cryptogen`` tool, the generated certificates and keys will be
-saved to a folder titled ``crypto-config``.
+运行 ``cryptogen`` 工具后，生成的证书和密钥将被保存到 ``crypto-config`` 文件夹中。
 
-Configuration Transaction Generator
------------------------------------
+生成配置交易(Configuration Transaction)
+----------------------------------------
 
-The ``configtxgen tool`` is used to create four configuration artifacts:
+``configtxgen`` 工具用于创建以下四个配置构件：
 
-  * orderer ``genesis block``,
-  * channel ``configuration transaction``,
-  * and two ``anchor peer transactions`` - one for each Peer Org.
+  * 排序节点 ``创世区块(Genesis Block)``
+  * 频道 ``配置交易(Configuration Transaction)``
+  * 两个 ``锚节点交易(anchor peer transactions)`` - 每个机构对应一个节点
 
-Please see :doc:`configtxgen` for a complete description of the use of this
-tool.
+请参阅 :doc:`configtxgen` 以获取完整的使用说明。
 
-The orderer block is the :ref:`Genesis-Block` for the ordering service, and the
-channel transaction file is broadcast to the orderer at :ref:`Channel` creation
-time.  The anchor peer transactions, as the name might suggest, specify each
-Org's :ref:`Anchor-Peer` on this channel.
+排序节点区块(the orderer block)是排序服务(Ordering Service)的 :ref:`创世区块(Genesis Block)` ，并且 频道交易文件(the channel transaction file) 在 :ref:`频道(Channel)` 被创建时，被广播给排序节点(the orderer)。 锚节点交易(anchor peer transactions) ，正如名字所表述的一样，指定了频道(Channel)中，每个机构的 :ref:`锚节点(Anchor Peer)` 。
 
-How does it work?
+它是如何工作的？
 ^^^^^^^^^^^^^^^^^
 
-Configtxgen consumes a file - ``configtx.yaml`` - that contains the definitions
-for the sample network. There are three members - one Orderer Org (``OrdererOrg``)
-and two Peer Orgs (``Org1`` & ``Org2``) each managing and maintaining two peer nodes.
-This file also specifies a consortium - ``SampleConsortium`` - consisting of our
-two Peer Orgs.  Pay specific attention to the "Profiles" section at the top of
-this file.  You will notice that we have two unique headers. One for the orderer genesis
-block - ``TwoOrgsOrdererGenesis`` - and one for our channel - ``TwoOrgsChannel``.
+Configtxgen使用 ``configtx.yaml`` 文件，其包含了示例网络的定义。有三个会员 - 一个排序节点机构(Orderer Org)(``OrdererOrg``)和两个节点机构(Peer Orgs)(``Org1`` & ``Org2``)，每个管理和维护两个节点(Peer)。该文件还指定了由两个节点机构(Peer Orgs)组成的联盟 - ``SampleConsortium``。请特别注意文件顶部的 "Profiles" 部分。你会注意到有两个特别的部分，一个是排序节点创世区块(the orderer genesis
+block) - ``TwoOrgsOrdererGenesis`` - 一个是频道(Channel) - ``TwoOrgsChannel``。
 
-These headers are important, as we will pass them in as arguments when we create
-our artifacts.
+上面的两个很重要，因为我们会在创建构件时，将它们作为参数。
 
-.. note:: Notice that our ``SampleConsortium`` is defined in
-          the system-level profile and then referenced by
-          our channel-level profile.  Channels exist within
-          the purview of a consortium, and all consortia
-          must be defined in the scope of the network at
-          large.
+.. note:: 请注意，我们的 ``SampleConsortium`` 是在系统级配置文件中定义的，然后在频道级配置文件中被引用。频道(Channel)存在于一个联盟的范围内，所有联盟都必须在整个网络范围内进行界定。
 
-This file also contains two additional specifications that are worth
-noting. Firstly, we specify the anchor peers for each Peer Org
-(``peer0.org1.example.com`` & ``peer0.org2.example.com``).  Secondly, we point to
-the location of the MSP directory for each member, in turn allowing us to store the
-root certificates for each Org in the orderer genesis block.  This is a critical
-concept. Now any network entity communicating with the ordering service can have
-its digital signature verified.
+文件还包含了其他两个值得注意的地方。首先，我们为每个节点机构(Peer Orgs)指定了锚节点(Anchor Peer)（``peer0.org1.example.com`` & ``peer0.org2.example.com``）。其次，每个会员(Member)的MSP目录位置，反过来，都可以让我们将在排序节点创世区块(the orderer genesis block)内的每个机构的根证书存储在其之中。这是一个非常重要的概念，这样任何与排序服务(Ordering Service)通信的网络实体都可以验证数字签名了。
 
-Run the tools
--------------
+使用工具
+-----------
 
-You can manually generate the certificates/keys and the various configuration
-artifacts using the ``configtxgen`` and ``cryptogen`` commands. Alternately,
-you could try to adapt the byfn.sh script to accomplish your objectives.
+你可以使用 ``configtxgen`` 和 ``cryptogen`` 命令，来手动生成证书/密钥和各种配置构件。或者，您可以尝试修改 byfn.sh 脚本来实现您的目的。
 
-Manually generate the artifacts
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+手动生成构件
+^^^^^^^^^^^^^
 
-You can refer to the ``generateCerts`` function in the byfn.sh script for the
-commands necessary to generate the certificates that will be used for your
-network configuration as defined in the ``crypto-config.yaml`` file. However,
-for the sake of convenience, we will also provide a reference here.
+可以参考 byfn.sh 脚本中的 ``generateCerts`` 函数，以获取所需的命令，生成用于网络配置的证书，就如 ``crypto-config.yaml`` 中所定义的那样。不过，为方便起见，我们也会在这里提供参考。
 
-First let's run the ``cryptogen`` tool.  Our binary is in the ``bin``
-directory, so we need to provide the relative path to where the tool resides.
+首先，让我们运行 ``cryptogen`` 工具。执行文件位于 ``bin`` 目录下，所以我们需要工具所在的相对路径。
 
 .. code:: bash
 
     ../bin/cryptogen generate --config=./crypto-config.yaml
 
-You will likely see the following warning.  It's innocuous, ignore it:
+你可能会看到以下的警告。但这是无害的，忽略它：
 
 .. code:: bash
 
     [bccsp] GetDefault -> WARN 001 Before using BCCSP, please call InitFactories(). Falling back to bootBCCSP.
 
-Next, we need to tell the ``configtxgen`` tool where to look for the
-``configtx.yaml`` file that it needs to ingest.  We will tell it look in our
-present working directory:
+接下来，我们需要告诉 ``configtxgen`` 工具，在哪里查找需要获取的 ``configtx.yaml`` 文件。我们会告诉它在当前的目录中查找：
 
-First, we need to set an environment variable to specify where ``configtxgen``
-should look for the configtx.yaml configuration file:
+首先，我们需要设置一个环境变量来指定 ``configtxgen`` 应该在哪里查找 ``configtx.yaml`` 配置文件：
 
 .. code:: bash
 
     export FABRIC_CFG_PATH=$PWD
 
-Then, we'll invoke the ``configtxgen`` tool which will create the orderer genesis block:
+然后，我们将调用 ``configtxgen`` 工具来创建排序节点创世区块(the orderer genesis block)：
 
 .. code:: bash
 
     ../bin/configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block
 
-You can ignore the log warnings regarding intermediate certificates, certificate
-revocation lists (crls) and MSP configurations. We are not using any of those
-in this sample network.
+你可以忽略有关中间证书，证书吊销列表（crls）和MSP配置的日志警告。在这个示例网络中，我们没有使用其中的任何一个。
 
 .. code: bash
 
@@ -402,11 +312,10 @@ in this sample network.
 
 .. _createchanneltx:
 
-Create a Channel Configuration Transaction
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+创建频道配置交易(Channel Configuration Transaction)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Next, we need to create the channel transaction artifact. Be sure to replace $CHANNEL_NAME or
-set CHANNEL_NAME as an environment variable that can be used throughout these instructions:
+接下来，我们需要创建频道配置交易(Channel Configuration Transaction)构件。请务必替换 $CHANNEL_NAME 或将 CHANNEL_NAME 设置为在整个上下文环境中可使用的环境变量：
 
 .. code:: bash
 
@@ -415,22 +324,20 @@ set CHANNEL_NAME as an environment variable that can be used throughout these in
     # this file contains the definitions for our sample channel
     ../bin/configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID $CHANNEL_NAME
 
-Next, we will define the anchor peer for Org1 on the channel that we are
-constructing. Again, be sure to replace $CHANNEL_NAME or set the environment variable
-for the following commands:
+接下来，我们将定义频道上的 Org1 的锚节点(Anchor Peer)。同样，请确保替换 $CHANNEL_NAME 或为以下命令设置环境变量：
 
 .. code:: bash
 
     ../bin/configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
 
-Now, we will define the anchor peer for Org2 on the same channel:
+现在，我们将在同一个频道上定义 Org2 的锚节点(Anchor Peer)：
 
 .. code:: bash
 
     ../bin/configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org2MSP
 
-Start the network
------------------
+启动网络
+-----------
 
 We will leverage a docker-compose script to spin up our network. The
 docker-compose file references the images that we have previously downloaded,
@@ -463,10 +370,10 @@ Start your network:
 If you want to see the realtime logs for your network, then do not supply the ``-d`` flag.
 If you let the logs stream, then you will need to open a second terminal to execute the CLI calls.
 
-.. _peerenvvars::
+.. _peerenvvars:
 
-Environment variables
-^^^^^^^^^^^^^^^^^^^^^
+环境变量
+^^^^^^^^^^^
 
 For the following CLI commands against ``peer0.org1.example.com`` to work, we need
 to preface our commands with the four environment variables given below.  These
@@ -487,8 +394,8 @@ paths:
 
 .. _createandjoin:
 
-Create & Join Channel
-^^^^^^^^^^^^^^^^^^^^^
+创建&添加频道(Channel)
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Recall that we created the channel configuration transaction using the
 ``configtxgen`` tool in the :ref:`createchanneltx` section, above. You can
@@ -553,8 +460,8 @@ You can make other peers join the channel as necessary by making appropriate
 changes in the four environment variables we used in the :ref:`peerenvvars`
 section, above.
 
-Install & Instantiate Chaincode
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+安装&实例化链码(Chaincode)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note:: We will utilize a simple existing chaincode. To learn how to write
           your own chaincode, see the :doc:`chaincode4ade` tutorial.
@@ -592,7 +499,7 @@ See the `endorsement
 policies <http://hyperledger-fabric.readthedocs.io/en/latest/endorsement-policies.html>`__
 documentation for more details on policy implementation.
 
-Query
+查询
 ^^^^^
 
 Let's query for the value of ``a`` to make sure the chaincode was properly
@@ -605,7 +512,7 @@ instantiated and the state DB was populated. The syntax for query is as follows:
   peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}'
 
 
-Invoke
+调用
 ^^^^^^
 
 Now let's move ``10`` from ``a`` to ``b``.  This transaction will cut a new block and
@@ -617,7 +524,7 @@ update the state DB. The syntax for invoke is as follows:
 
     peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem  -C $CHANNEL_NAME -n mycc -c '{"Args":["invoke","a","b","10"]}'
 
-Query
+查询
 ^^^^^
 
 Let's confirm that our previous invocation executed properly. We initialized the
@@ -723,8 +630,8 @@ This includes those peers that do not have chaincode installed on them
 after it is installed (like ``peer1.org2.example.com`` in the above example) because it
 has already been instantiated.
 
-How do I see these transactions?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+如何查看交易？
+^^^^^^^^^^^^^^^
 
 Check the logs for the CLI Docker container.
 
@@ -755,8 +662,8 @@ You should see the following output:
 
 You can scroll through these logs to see the various transactions.
 
-How can I see the chaincode logs?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+如何查看链码的日志？
+^^^^^^^^^^^^^^^^^^^^
 
 Inspect the individual chaincode containers to see the separate
 transactions executed against each container. Here is the combined
@@ -781,8 +688,8 @@ output from each container:
         ex02 Invoke
         Query Response:{"Name":"a","Amount":"90"}
 
-Understanding the Docker Compose topology
------------------------------------------
+理解 Docker Compose 的拓扑结构
+--------------------------------
 
 The BYFN sample offers us two flavors of Docker Compose files, both of which
 are extended from the ``docker-compose-base.yaml`` (located in the ``base``
@@ -812,8 +719,8 @@ for ca0 and ca1.  You also need to edit the path that is provided in the command
 to start the ca server.  You are providing the same private key twice for each
 CA container.
 
-Using CouchDB
--------------
+使用CouchDB
+--------------
 
 The state database can be switched from the default (goleveldb) to CouchDB.
 The same chaincode functions are available with CouchDB, however, there is the
@@ -918,8 +825,9 @@ The output should display the two marbles owned by ``jerry``:
        Query Result: [{"Key":"marble2", "Record":{"color":"red","docType":"marble","name":"marble2","owner":"jerry","size":50}},{"Key":"marble3", "Record":{"color":"blue","docType":"marble","name":"marble3","owner":"jerry","size":70}}]
 
 
-Why CouchDB
--------------
+为什么是CouchDB
+-----------------
+
 CouchDB is a kind of NoSQL solution. It is a document oriented database where document fields are stored as key-value mpas. Fields can be either a simple key/value pair, list, or map.
 In addition to keyed/composite-key/key-range queries which are supported by LevelDB, CouchDB also supports full data rich queries capability, such as non-key queries against the whole blockchain data,
 since its data content is stored in JSON format and fully queryable. Therefore, CouchDB can meet chaincode, auditing, reporting requirements for many use cases that not supported by LevelDB.
@@ -934,9 +842,8 @@ However, under each fabric peer, there is no database replicas, writes to databa
 CouchDB is the first external pluggable state database for Fabric, and there could and should be other external database options. For example, IBM enables the relational database for its blockchain.
 And the CP-type (Consistency and Partition Tolerance) databases may also in need, so as to enable data consistency without application level guarantee.
 
-
-A Note on Data Persistence
---------------------------
+关于数据持久化的备注说明
+------------------------
 
 If data persistence is desired on the peer container or the CouchDB container,
 one option is to mount a directory in the docker-host into a relevant directory
@@ -956,10 +863,10 @@ container specification:
        volumes:
         - /var/hyperledger/couchdb0:/opt/couchdb/data
 
-.. _Troubleshoot:
+.. _疑难解答:
 
-Troubleshooting
----------------
+疑难解答
+----------
 
 -  Always start your network fresh.  Use the following command
    to remove artifacts, crypto, containers and chaincode images:

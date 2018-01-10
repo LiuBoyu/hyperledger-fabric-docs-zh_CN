@@ -33,7 +33,7 @@ Read the Docs: [Hyperledger Fabric v1.0 官方文档（英文原版）](http://h
 | Hyperledger Fabric Model                       | fabric_model             |  161 | DONE |
 | Use Cases                                      | usecases                 |   11 | DONE |
 | TUTORIALS                                      |                          |      |   |
-| Building Your First Network                    | build_network            | 1058 | - |
+| Building Your First Network                    | build_network            | 1058 | DOING |
 | Writing Your First Application                 | write_first_app          |  506 | - |
 | Chaincode Tutorials                            | chaincode                |   33 | - |
 | Chaincode for Developers                       | chaincode4ade            |  522 | - |
